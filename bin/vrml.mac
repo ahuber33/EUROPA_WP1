@@ -1,0 +1,35 @@
+###################################################################
+################# PART FOR MESSENGER INFORMATION ##################
+###################################################################
+/EUROPA_WP1/geometry/setQ1Length 0.1 m                        # Set Q1 Length
+/EUROPA_WP1/geometry/setQ2Length 0.1 m                        # Set Q2 Length
+/EUROPA_WP1/geometry/setQ3Length 0.2 m                        # Set Q3 Length
+/EUROPA_WP1/geometry/setQ4Length 0.1 m                        # Set Q4 Length
+/EUROPA_WP1/geometry/setSourceQ1Distance 0.173331 m           # Distance from source to Q1 
+/EUROPA_WP1/geometry/setQ1Q2Distance 0.165062 m               # Distance between Q1 & Q2
+/EUROPA_WP1/geometry/setQ2Q3Distance 0.259041 m               # Distance between Q2 & Q3
+/EUROPA_WP1/geometry/setQ3Q4Distance 0.86536 m                # Distance between Q3 & Q4
+/EUROPA_WP1/geometry/setSourceCollimatorsDistance 2884.5 mm   # Distance from source to collimators
+
+/EUROPA_WP1/geometry/setHorizontalSlitOpening 0.4 mm          # Horizontal slit collimator (1st collimator)
+/EUROPA_WP1/geometry/setVerticalSlitOpening 0.2 mm            # Vertical slit opening (2nd collimator)
+/run/reinitializeGeometry                                         # Apply geometry changes
+
+
+/EUROPA_WP1/step/SetTrackingStatus true                       # Enable tracking (true) or not (false)
+/EUROPA_WP1/step/SetTrackingStatusCollimators false           # Enable tracking (true) or not (false)
+                                                                  # after collision with collimators
+
+/tracking/verbose 0                                               # Enable or not detailed tracking output
+/run/verbose 1                                                    # Enable or not verbose run output
+
+
+###################################################################
+########## PART TO SIMULATE PARTICLE WITH GPS (no setgun) #########
+###################################################################
+/gps/number 1                                                     # Generate 1 particle
+/gps/particle geantino                                            # Set particle type
+/gps/pos/type Point                                               # Particle generated at a point
+/gps/pos/centre 10 0.0 10 mm                                      # Particle start position
+/gps/direction 0.0 1.0 0.0                                        # Particle direction along Y-axis
+/gps/energy 250. MeV                                              # Particle energy

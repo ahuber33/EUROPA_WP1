@@ -1,0 +1,77 @@
+# ------------------------- VISUALIZATION -------------------------
+/vis/open OGL 600x600-0+0                                         # Open an OpenGL viewer with a 600x600 pixel window
+/vis/drawVolume                                                   # Draw the full geometry
+#/vis/viewer/set/style wireframe                                  # (optional) Set geometry to wireframe style
+/vis/viewer/set/viewpointThetaPhi 0 0                             # Set the camera viewpoint angles theta=0, phi=0
+/vis/viewer/set/upVector 1 0 0                                    # Set the camera "up" vector
+/vis/viewer/set/viewpointVector -0.99 0 0.01                      # Set the camera pointing vector
+/vis/viewer/zoom 1.                                               # Set initial zoom to 1x
+/vis/viewer/set/auxiliaryEdge true                                # Display auxiliary edges for better visibility
+#/vis/set/lineWidth 2                                             # (optional) Set line width
+/vis/viewer/set/hiddenMarker true                                 # Enable hidden marker display
+/vis/scene/add/trajectories smooth                                # Add smoothed particle trajectories
+/vis/scene/endOfEventAction accumulate                            # Accumulate trajectories from multiple events
+
+# ------------------------- AXES / SCALE / INFO -------------------
+#/vis/scene/add/scale                                             # (optional) Add a simple scale line
+#/vis/scene/add/axes                                              # (optional) Add axes: x=red, y=green, z=blue
+#/vis/scene/add/eventID                                           # (optional) Display event ID
+/vis/scene/add/date                                               # Display the date stamp
+/vis/viewer/set/background white                                  # Set background color to white
+#/vis/scene/add/logo                                              # (optional) Add 3D logo
+
+# ------------------------- EVENT HANDLING ------------------------
+/vis/scene/endOfEventAction accumulate                            # Superimpose all events
+# /vis/scene/endOfEventAction accumulate 10                       # (optional) Accumulate limited number of events
+# /vis/scene/endOfEventAction refresh                             # (optional) Refresh scene each event
+
+/vis/scene/add/hits                                               # Display hits
+/tracking/storeTrajectory 1                                       # Store particle trajectories for visualization
+
+# ------------------------- GEOMETRY TEST -------------------------
+/geometry/test/run                                                # Run test geometry
+#/geometry/test/line_test                                         # (optional) Line test
+/vis/scene/add/trajectories smooth                                # Add smoothed trajectories
+#/vis/scene/add/magneticField                                     # (optional) Display magnetic field
+#/vis/scene/add/electricField                                     # (optional) Display electric field
+
+###################################################################
+################# PART FOR MESSENGER INFORMATION ##################
+###################################################################
+/EUROPA_WP1/geometry/setQ1Length 0.1 m                        # Set Q1 Length
+/EUROPA_WP1/geometry/setQ2Length 0.1 m                        # Set Q2 Length
+/EUROPA_WP1/geometry/setQ3Length 0.2 m                        # Set Q3 Length
+/EUROPA_WP1/geometry/setQ4Length 0.1 m                        # Set Q4 Length
+/EUROPA_WP1/geometry/setSourceQ1Distance 0.173331 m           # Distance from source to Q1 
+/EUROPA_WP1/geometry/setQ1Q2Distance 0.165062 m               # Distance between Q1 & Q2
+/EUROPA_WP1/geometry/setQ2Q3Distance 0.259041 m               # Distance between Q2 & Q3
+/EUROPA_WP1/geometry/setQ3Q4Distance 0.86536 m                # Distance between Q3 & Q4
+/EUROPA_WP1/geometry/setSourceCollimatorsDistance 2884.5 mm   # Distance from source to collimators
+
+
+/EUROPA_WP1/geometry/setHorizontalSlitOpening 0.4 mm          # Horizontal slit collimator (1st collimator)
+/EUROPA_WP1/geometry/setVerticalSlitOpening 0.2 mm            # Vertical slit opening (2nd collimator)
+
+
+/run/reinitializeGeometry                                         # Apply geometry changes
+
+
+/EUROPA_WP1/step/SetTrackingStatus true                       # Enable tracking (true) or not (false)
+/EUROPA_WP1/step/SetTrackingStatusCollimators false           # Enable tracking (true) or not (false)
+                                                                  # after collision with collimators
+
+/tracking/verbose 1                                               # Enable or not detailed tracking output
+/run/verbose 1                                                    # Enable or not verbose run output
+
+
+###################################################################
+########## PART TO SIMULATE PARTICLE WITH GPS (no setgun) #########
+###################################################################
+/gps/number 1                                                     # Generate 1 particle
+/gps/particle geantino                                            # Set particle type
+/gps/pos/type Point                                               # Particle generated at a point
+/gps/pos/centre 0.0 0.0 0.0 mm                                      # Particle start position
+/gps/direction 0.0 1.0 0.0                                        # Particle direction along Y-axis
+/gps/energy 250. MeV                                              # Particle energy
+
+/run/beamOn 1                                                     # Start simulation for 1 particle
