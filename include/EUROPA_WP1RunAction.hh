@@ -59,14 +59,14 @@ struct RunTallyGlobalInput {
   int NEvents = 0;                 
 
   // --- Physical parameters ---
-  float Q1_Length = 0.0;          
-  float Q2_Length = 0.0;          
-  float Q3_Length = 0.0;          
-  float Q4_Length = 0.0;          
-  float SourceQ1Distance = 0.0;   
-  float Q1Q2Distance = 0.0;       
-  float Q2Q3Distance = 0.0;       
-  float Q3Q4Distance = 0.0;       
+  float Spectrum_Temperature = 3.0; // MeV
+  float Spectrum_Ecut = 300.0; // MeV
+  std::string Convertor_Material = "";
+  float Convertor_Radius = 0.0;          
+  float Convertor_Thickness = 0.0;          
+  float Cible_Radius = 0.0;          
+  float Cible_Thickness = 0.0;          
+  float Cible_DensityFraction = 0.0;          
 
   /**
    * @brief Populate structure from generator and geometry settings.
@@ -109,9 +109,8 @@ public:
   // --- Specific statistics update methods ---
   void UpdateStatisticsGlobalInput(RunTallyGlobalInput);
   void UpdateStatisticsInput(RunTallyInput);
-  void UpdateStatisticsHorizontalColl(RunTallyCollimators);
-  void UpdateStatisticsVerticalColl(RunTallyCollimators);
-  void UpdateStatisticsBSYAG(RunTallyYAG);
+  void UpdateStatisticsConverter(RunTallyConverter);
+  void UpdateStatisticsCible(RunTallyCible);
 
   /// Set the primary generator reference
   void SetPrimaryGenerator(EUROPA_WP1PrimaryGeneratorAction* gen);
@@ -127,9 +126,8 @@ private:
   // --- Stored run statistics ---
   RunTallyGlobalInput StatsGlobalInput;
   RunTallyInput StatsInput;
-  RunTallyCollimators StatsHorizontalColl;
-  RunTallyCollimators StatsVerticalColl;
-  RunTallyYAG StatsBSYAG;
+  RunTallyConverter StatsConverter;
+  RunTallyCible StatsCible;
 
   size_t NEventsGenerated; ///< Number of events generated in the run
   G4bool flag_MT;          ///< Multithreading enabled flag
@@ -138,9 +136,8 @@ private:
   TFile *f = nullptr;
   TTree *Tree_GlobalInput = nullptr;
   TTree *Tree_Input = nullptr;
-  TTree *Tree_HorizontalColl = nullptr;
-  TTree *Tree_VerticalColl = nullptr;
-  TTree *Tree_BSYAG = nullptr;
+  TTree *Tree_Converter = nullptr;
+  TTree *Tree_Cible = nullptr;
   TBranch *RunBranch = nullptr;
 
   time_t start; ///< Start time of the run

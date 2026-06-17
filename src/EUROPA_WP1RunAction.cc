@@ -70,34 +70,42 @@ void EUROPA_WP1RunAction::SetGeometry(EUROPA_WP1GeometryConstruction *geom)
  * @param branches List of name-pointer pairs
  */
 template <typename T>
-static void CreateBranches(TTree *tree, const std::vector<std::pair<const char *, T *>> &branches)
+static void CreateBranches(
+    TTree *tree,
+    const std::vector<std::pair<const char *, T *>> &branches)
 {
   for (const auto &b : branches)
   {
-    tree->Branch(
-        b.first,
-        b.second,
-        (std::string(b.first) + "/" +
-         (std::is_same<T, int>::value ? "I" : std::is_same<T, float>::value ? "F"
-                                                                            : ""))
-            .c_str());
+    if constexpr (std::is_same_v<T, int>)
+    {
+      tree->Branch(b.first, b.second, (std::string(b.first) + "/I").c_str());
+    }
+    else if constexpr (std::is_same_v<T, float>)
+    {
+      tree->Branch(b.first, b.second, (std::string(b.first) + "/F").c_str());
+    }
+    else if constexpr (std::is_same_v<T, double>)
+    {
+      tree->Branch(b.first, b.second, (std::string(b.first) + "/D").c_str());
+    }
+    else
+    {
+      tree->Branch(b.first, b.second); // strings et autres objets
+    }
   }
 }
 
 /**
- * @brief Creates ROOT branches specific to YAG detector statistics.
+ * @brief Creates ROOT branches specific to Cible statistics.
  * @param tree ROOT tree to populate
- * @param stats YAG statistics structure
+ * @param stats Cible statistics structure
  */
-static void CreateYAGBranches(TTree *tree, RunTallyYAG &stats)
+static void CreateCibleBranches(TTree *tree, RunTallyCible &stats)
 {
-  //tree->Branch("x_exit", "vector<float>", &stats.x_exit);
-  //tree->Branch("y_exit", "vector<float>", &stats.y_exit);
-  //tree->Branch("z_exit", "vector<float>", &stats.z_exit);
-  tree->Branch("parentID", "vector<int>", &stats.parentID);
-  //tree->Branch("particleID", "vector<int>", &stats.particleID);
+  tree->Branch("x_exit", "vector<float>", &stats.x_creation);
+  tree->Branch("y_exit", "vector<float>", &stats.y_creation);
+  tree->Branch("z_exit", "vector<float>", &stats.z_creation);
   tree->Branch("energy", "vector<float>", &stats.energy);
-  //tree->Branch("deposited_energy", "vector<float>", &stats.total_deposited_energy);
 }
 
 /**
@@ -105,7 +113,7 @@ static void CreateYAGBranches(TTree *tree, RunTallyYAG &stats)
  * @param tree ROOT tree to populate
  * @param stats Collimators statistics structure
  */
-static void CreateCollimatorsBranches(TTree *tree, RunTallyCollimators &stats)
+static void CreateConverterBranches(TTree *tree, RunTallyConverter &stats)
 {
   tree->Branch("x_interaction", &stats.x, "x_interaction/F");
   tree->Branch("y_interaction", &stats.y, "y_interaction/F");
@@ -137,9 +145,8 @@ void EUROPA_WP1RunAction::UpdateStatistics(T &stats, const T &newStats, TTree *t
 // --- Specific statistics update wrappers ---
 void EUROPA_WP1RunAction::UpdateStatisticsGlobalInput(RunTallyGlobalInput a) { UpdateStatistics(StatsGlobalInput, a, Tree_GlobalInput); }
 void EUROPA_WP1RunAction::UpdateStatisticsInput(RunTallyInput a) { UpdateStatistics(StatsInput, a, Tree_Input); }
-void EUROPA_WP1RunAction::UpdateStatisticsHorizontalColl(RunTallyCollimators a) { UpdateStatistics(StatsHorizontalColl, a, Tree_HorizontalColl); }
-void EUROPA_WP1RunAction::UpdateStatisticsVerticalColl(RunTallyCollimators a) { UpdateStatistics(StatsVerticalColl, a, Tree_VerticalColl); }
-void EUROPA_WP1RunAction::UpdateStatisticsBSYAG(RunTallyYAG a) { UpdateStatistics(StatsBSYAG, a, Tree_BSYAG); }
+void EUROPA_WP1RunAction::UpdateStatisticsConverter(RunTallyConverter a) { UpdateStatistics(StatsConverter, a, Tree_Converter); }
+void EUROPA_WP1RunAction::UpdateStatisticsCible(RunTallyCible a) { UpdateStatistics(StatsCible, a, Tree_Cible); }
 
 /**
  * @brief Populates global input statistics from generator and geometry state.
@@ -155,14 +162,14 @@ void RunTallyGlobalInput::FillFrom(const EUROPA_WP1GeometryConstruction *geo,
   {
     NEvents = nEvents;
 
-    Q1_Length = geo->GetQ1Length();
-    Q2_Length = geo->GetQ2Length();
-    Q3_Length = geo->GetQ3Length();
-    Q4_Length = geo->GetQ4Length();
-    SourceQ1Distance = geo->GetSourceQ1Distance();
-    Q1Q2Distance = geo->GetQ1Q2Distance();
-    Q2Q3Distance = geo->GetQ2Q3Distance();
-    Q3Q4Distance = geo->GetQ3Q4Distance();
+    Spectrum_Temperature = geo->GetSpectrumTemperature();
+    Spectrum_Ecut = geo->GetSpectrumEcut();
+    Convertor_Material = geo->GetConvertorMaterial();
+    Convertor_Radius = geo->GetConvertorRadius();
+    Convertor_Thickness = geo->GetConvertorThickness();
+    Cible_Radius = geo->GetCibleRadius();
+    Cible_Thickness = geo->GetCibleThickness();
+    Cible_DensityFraction = geo->GetCibleDensityFraction();
   }
 }
 
@@ -192,25 +199,28 @@ void EUROPA_WP1RunAction::BeginOfRunAction(const G4Run *aRun)
   // Creating trees for different types of run information
   Tree_GlobalInput = new TTree("GlobalInput", "Global Input Information");                 // Tree to access Input information
   Tree_Input = new TTree("Input", "Input Information");                                    // Tree to access Input information
-  Tree_HorizontalColl = new TTree("Horizontal_Coll", "Horizontal Collimator Information"); // Tree to access Horizontal Collimator information
-  Tree_VerticalColl = new TTree("Vertical_Coll", "Vertical Collimator Information");       // Tree to access Vertical Collimator information
-  Tree_BSYAG = new TTree("BSYAG", "BS YAG Information");                                   // Tree to access Back Collimator infos
+  Tree_Converter = new TTree("Converter", "Converter Information"); // Tree to access Converter information
+  Tree_Cible = new TTree("Cible", "Cible Information");                                   // Tree to access Cible infos
 
   //*****************************INFORMATIONS FROM THE GLOBAL INPUT*******************************************
   std::vector<std::pair<const char *, int *>> globalIntBranches = {
       {"NEvents", &StatsGlobalInput.NEvents}};
 
+  std::vector<std::pair<const char *, std::string *>> globalStringBranches = {
+      {"Convertor_Material", &StatsGlobalInput.Convertor_Material}
+  };   
+
   std::vector<std::pair<const char *, float *>> globalFloatBranches = {
-      {"Q1_Length", &StatsGlobalInput.Q1_Length},
-      {"Q2_Length", &StatsGlobalInput.Q2_Length},
-      {"Q3_Length", &StatsGlobalInput.Q3_Length},
-      {"Q4_Length", &StatsGlobalInput.Q4_Length},
-      {"SourceQ1Distance", &StatsGlobalInput.SourceQ1Distance},
-      {"Q1Q2Distance", &StatsGlobalInput.Q1Q2Distance},
-      {"Q2Q3Distance", &StatsGlobalInput.Q2Q3Distance},
-      {"Q3Q4Distance", &StatsGlobalInput.Q3Q4Distance}};
+      {"Spectrum_Temperature", &StatsGlobalInput.Spectrum_Temperature},
+      {"Spectrum_Ecut", &StatsGlobalInput.Spectrum_Ecut},
+      {"Convertor_Radius", &StatsGlobalInput.Convertor_Radius},
+      {"Convertor_Thickness", &StatsGlobalInput.Convertor_Thickness},
+      {"Cible_Radius", &StatsGlobalInput.Cible_Radius},
+      {"Cible_Thickness", &StatsGlobalInput.Cible_Thickness},
+      {"Cible_DensityFraction", &StatsGlobalInput.Cible_DensityFraction}};
 
   CreateBranches(Tree_GlobalInput, globalIntBranches);
+  CreateBranches(Tree_GlobalInput, globalStringBranches);
   CreateBranches(Tree_GlobalInput, globalFloatBranches);
 
   //*****************************INFORMATIONS FROM THE INPUT*******************************************
@@ -220,14 +230,11 @@ void EUROPA_WP1RunAction::BeginOfRunAction(const G4Run *aRun)
 
   
   //************************************INFORMATIONS FROM THE HORIZONTAL COLLIMATOR*****************************************
-  CreateCollimatorsBranches(Tree_HorizontalColl, StatsHorizontalColl);
-
-  //************************************INFORMATIONS FROM THE VERTICAL COLLIMATOR*****************************************
-  CreateCollimatorsBranches(Tree_VerticalColl, StatsVerticalColl);
+  CreateConverterBranches(Tree_Converter, StatsConverter);
 
   //************************************INFORMATIONS FROM THE YAGs*****************************************
   //************************************INFORMATIONS FROM THE BS YAG*****************************************
-  CreateYAGBranches(Tree_BSYAG, StatsBSYAG);
+  CreateCibleBranches(Tree_Cible, StatsCible);
 
   // set the random seed to the CPU clock
   // G4Random::setTheEngine(new CLHEP::HepJamesRandom);
@@ -265,9 +272,8 @@ void EUROPA_WP1RunAction::EndOfRunAction(const G4Run *aRun)
   f->cd();
   Tree_GlobalInput->Write();
   Tree_Input->Write();
-  Tree_HorizontalColl->Write();
-  Tree_VerticalColl->Write();
-  Tree_BSYAG->Write();
+  Tree_Converter->Write();
+  Tree_Cible->Write();
   f->Close();
   delete f;
   f = nullptr;
