@@ -165,59 +165,26 @@ void EUROPA_WP1GeometryConstruction::CreateWorldAndHolder()
 }
 
 
-void EUROPA_WP1GeometryConstruction::ConstructFakeVerticalCollimator()
+void EUROPA_WP1GeometryConstruction::ConstructConvertor()
 {
-    LogicalPALLAS_Collimator_V = Geom->GetFakeCollimatorVolume("V");
-    Material = G4NistManager::Instance()->FindOrBuildMaterial("G4_STAINLESS-STEEL");
-    LogicalPALLAS_Collimator_V->SetMaterial(Material);
+    LogicalConvertor = Geom->GetTubsVolume("Convertor", GetConvertorMaterial(), GetConvertorRadius(), GetConvertorThickness(), 1.0);
 
-    G4GeometryManager::GetInstance()->OpenGeometry();
+    SetLogicalVolumeColor(LogicalConvertor, "black");
 
-    auto pipe1 = static_cast<G4Box *>(G4LogicalVolumeStore::GetInstance()->GetVolume("V")->GetSolid());
-    pipe1->SetXHalfLength(40 / 2);
-    pipe1->SetYHalfLength(120 / 2);
-    pipe1->SetZHalfLength(40 / 2);
-
-    SetLogicalVolumeColor(LogicalPALLAS_Collimator_V, "blue");
-
-    G4RotationMatrix *rotationMatrix = new G4RotationMatrix();
-    rotationMatrix->rotateX(0.0 * deg);
-
-    G4ThreeVector translation1((-fVerticalSlitOpening/2 - 40/2 * mm), fSourceCollimatorsDistance + 123, 0.0 * mm);
-
-    G4ThreeVector translation2((fVerticalSlitOpening/2 + 40/2 * mm), fSourceCollimatorsDistance + 123, 0.0 * mm);
-
-    PhysicalPALLAS_FakeCollimator_V1 = new G4PVPlacement(rotationMatrix, translation1, LogicalPALLAS_Collimator_V, "VerticalCollimator", LogicalHolder, false, 0);
-    PhysicalPALLAS_FakeCollimator_V2 = new G4PVPlacement(rotationMatrix, translation2, LogicalPALLAS_Collimator_V, "VerticalCollimator", LogicalHolder, false, 0);
+    PhysicalConvertor = new G4PVPlacement(G4Transform3D(DontRotate, G4ThreeVector(0, 0, 0)),
+                                        LogicalConvertor, "Convertor", LogicalHolder, false, 0);
 }
 
-void EUROPA_WP1GeometryConstruction::ConstructFakeHorizontalCollimator()
+void EUROPA_WP1GeometryConstruction::ConstructCible()
 {
+    LogicalCible = Geom->GetTubsVolume("Cible", "G4_Mo", GetCibleRadius(), GetCibleThickness(), GetCibleDensityFraction());
 
-    LogicalPALLAS_Collimator_H = Geom->GetFakeCollimatorVolume("H");
-    Material = G4NistManager::Instance()->FindOrBuildMaterial("G4_STAINLESS-STEEL");
-    LogicalPALLAS_Collimator_H->SetMaterial(Material);
+    SetLogicalVolumeColor(LogicalCible, "blue");
 
-    G4GeometryManager::GetInstance()->OpenGeometry();
+    PhysicalCible = new G4PVPlacement(G4Transform3D(DontRotate, G4ThreeVector(0, 0, GetConvertorThickness()/2 + GetCibleThickness()/2)),
+                                        LogicalCible, "Cible", LogicalHolder, false, 0);
+}
 
-    auto pipe1 = static_cast<G4Box *>(G4LogicalVolumeStore::GetInstance()->GetVolume("H")->GetSolid());
-    pipe1->SetXHalfLength(40 / 2);
-    pipe1->SetYHalfLength(60 / 2);
-    pipe1->SetZHalfLength(40 / 2);
-
-    SetLogicalVolumeColor(LogicalPALLAS_Collimator_H, "black");
-
-    G4RotationMatrix *rotationMatrix = new G4RotationMatrix();
-    rotationMatrix->rotateX(0.0 * deg);
-
-    G4ThreeVector translation1(0.0 * mm, fSourceCollimatorsDistance + 30, (-fHorizontalSlitOpening/2 - 40/2 * mm));
-
-    G4ThreeVector translation2(0.0 * mm, fSourceCollimatorsDistance + 30, (fHorizontalSlitOpening/2 + 40/2 * mm));
-
-    PhysicalPALLAS_FakeCollimator_H1 = new G4PVPlacement(rotationMatrix, translation1, LogicalPALLAS_Collimator_H, "HorizontalCollimator", LogicalHolder, false, 0);
-    PhysicalPALLAS_FakeCollimator_H2 = new G4PVPlacement(rotationMatrix, translation2, LogicalPALLAS_Collimator_H, "HorizontalCollimator", LogicalHolder, false, 0);
-
-    }
 
 
     /**
@@ -261,8 +228,8 @@ void EUROPA_WP1GeometryConstruction::ConstructFakeHorizontalCollimator()
 
         /// Create the world and main holder volume
         CreateWorldAndHolder();
-        ConstructFakeHorizontalCollimator();
-        ConstructFakeVerticalCollimator();
+        //ConstructConvertor();
+        ConstructCible();
 
         G4cout << "END OF THE DETECTOR CONSTRUCTION" << G4endl;
 

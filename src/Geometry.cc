@@ -82,14 +82,36 @@ G4LogicalVolume* Geometry::GetGDMLVolume(const char* path, const char* VName, G4
  * @param name Name of the volume.
  * @return Pointer to the created G4LogicalVolume.
  */
-G4LogicalVolume *Geometry::GetFakeCollimatorVolume(G4String name)
+G4LogicalVolume *Geometry::GetTubsVolume(G4String name, G4String material, G4double radius, G4double thickness, G4double densityfraction)
 {
-  Material = G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
+  Material = G4NistManager::Instance()->FindOrBuildMaterial(material);
 
-  Box = new G4Box("Box",                                 // its name
-                         10*mm, 10*mm, 10*mm); // its size
+  G4double density = Material->GetDensity() * densityfraction;
 
-  LogicalVolume = new G4LogicalVolume(Box, Material, name, 0, 0, 0);
+  Tubs = new G4Tubs("Tubs", 0, radius, thickness/2, 0., 360. * deg);
+
+  if (densityfraction < 1.0)
+    {
+      scaledMaterial = new G4Material(
+        material + "_scaled",
+        density,
+        Material);
+
+        LogicalVolume = new G4LogicalVolume(Tubs, scaledMaterial, name, 0, 0, 0);
+    }
+
+  else if (densityfraction == 1.0)
+    {
+      LogicalVolume = new G4LogicalVolume(Tubs, Material, name, 0, 0, 0);
+    }
+
+  else
+    {
+      G4Exception("Geometry::GetTubsVolume",
+                "InvalidDensityFraction",
+                FatalException,
+                "densityfraction must be <= 1.0");
+    }
 
   return LogicalVolume;
 }
