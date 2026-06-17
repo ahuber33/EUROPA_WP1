@@ -87,7 +87,7 @@ void EUROPA_WP1SteppingAction::SetInputInformations(EUROPA_WP1EventAction *evtac
  * @param z Interaction Z position [mm].
  * @param energy Kinetic energy at interaction [MeV].
  */
-void UpdateCollimators(RunTallyCollimators &tally, G4float x, G4float y, G4float z, G4float energy)
+void UpdateConverter(RunTallyConverter &tally, G4float x, G4float y, G4float z, G4float energy)
 {
     tally.SetXInteraction(x);
     tally.SetYInteraction(y);
@@ -104,41 +104,13 @@ void UpdateCollimators(RunTallyCollimators &tally, G4float x, G4float y, G4float
  * @param y Exit Y position [mm].
  * @param z Exit Z position [mm].
  * @param energy Particle kinetic energy [MeV].
- * @param energyDeposited Deposited energy [keV].
- * @param parentID ID of the parent track.
- * @param particleID PDG encoding of the particle.
- * @param volumeNamePostStep Name of the post-step volume.
- * @param trackingStatus Whether particle tracking is active.
- * @param track Pointer to the current Geant4 track.
  */
-void UpdateYAG(RunTallyYAG &tally, G4float x, G4float y, G4float z,
-                 G4float energy, G4float energyDeposited,
-                 G4float parentID, G4int particleID,
-                 const G4String &volumeNamePostStep, G4bool trackingStatus,
-                 G4Track *track)
+void UpdateCible(RunTallyCible &tally, G4float x, G4float y, G4float z, G4float energy)
 {
-    // If this is the first step for this particle in this tally
-    if (!tally.flag)
-    {
-        tally.AddXExit(x);
-        tally.AddYExit(y);
-        tally.AddZExit(z);
-        tally.AddParentID(parentID);
-        tally.AddParticleID(particleID);
-        tally.AddEnergy(energy);
-        tally.ActivateFlag();
-    }
-
-    // Add energy deposited for this step
-    tally.AddDepositedEnergy(energyDeposited);
-
-    // If particle reached holder volume or lost all energy
-    if (volumeNamePostStep == "Holder" || (energy - energyDeposited) == 0)
-    {
-        tally.AddTotalDepositedEnergy(tally.GetDepositedEnergy());
-        tally.ResetDepositedEnergy();
-        tally.ResetFlag();
-    }
+    tally.AddXCreation(x);
+    tally.AddYCreation(y);
+    tally.AddZCreation(z);
+    tally.AddEnergy(energy);
 }
 
 /**
@@ -184,6 +156,9 @@ void EUROPA_WP1SteppingAction::UserSteppingAction(const G4Step *aStep)
     volumeNamePreStep  = pre->GetPhysicalVolume()->GetName();
     volumeNamePostStep = post->GetPhysicalVolume()->GetName();
 
+    pd = theTrack->GetDefinition();
+    auto ion = dynamic_cast<G4Ions*>(pd);
+
     // --- Begin main logic ---
 
     // Initial beam info (step 1, primary particle only)
@@ -194,33 +169,30 @@ void EUROPA_WP1SteppingAction::UserSteppingAction(const G4Step *aStep)
     // Collimators
     if (parentID == 0)
     {
-        if (volumeNamePostStep == "HorizontalCollimator" && !evtac->GetHorizontalCollimators().GetFlag())
+        if (volumeNamePostStep == "Converter")
         {
-            UpdateCollimators(evtac->GetHorizontalCollimators(), postStep.x, postStep.y, postStep.z, energy);
-            if (!TrackingStatusCollimators) theTrack->SetTrackStatus(fStopAndKill);
-        }
-
-        if (volumeNamePreStep == "VerticalCollimator"
-            && !evtac->GetHorizontalCollimators().GetFlag()
-            && !evtac->GetVerticalCollimators().GetFlag())
-        {
-            UpdateCollimators(evtac->GetVerticalCollimators(), postStep.x, postStep.y, postStep.z, energy);
-            if (!TrackingStatusCollimators) theTrack->SetTrackStatus(fStopAndKill);
+            UpdateConverter(evtac->GetConverter(), postStep.x, postStep.y, postStep.z, energy);
         }
     }
 
-    // YAG screens
-    static const std::map<std::string, RunTallyYAG&(EUROPA_WP1EventAction::*)()> yagMap = {
-        {"BS1_YAG",    &EUROPA_WP1EventAction::GetBSYAG},
-    };
-
-    auto it = yagMap.find(volumeNamePreStep);
-    if (it != yagMap.end())
+    if (ion)
     {
-        RunTallyYAG &yag = (evtac->*(it->second))();
-        UpdateYAG(yag, postStep.x, postStep.y, postStep.z, energy, energyDeposited,
-                  parentID, particleID, volumeNamePostStep, TrackingStatus, theTrack);
+        Z = ion->GetAtomicNumber();
+        A = ion->GetAtomicMass();
+
+        if (volumeNamePostStep == "Cible"
+        && Z == 42
+        && A == 99
+        && stepNo ==1
+        && theTrack->GetCreatorProcess()->GetProcessName() == "photonNuclear")
+        {
+            //G4cout << "Creation 99Mo" << G4endl;
+            //G4cout << "Creator process = " << theTrack->GetCreatorProcess()->GetProcessName() << G4endl;
+            UpdateCible(evtac->GetCible(), postStep.x, postStep.y, postStep.z, energy);
+        }
     }
+    
+
 
     // Kill particles leaving the world
     if (volumeNamePostStep == "World")

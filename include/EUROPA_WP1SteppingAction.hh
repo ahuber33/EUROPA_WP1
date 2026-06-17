@@ -18,6 +18,7 @@
 #include "G4UserSteppingAction.hh"
 #include "EUROPA_WP1RunAction.hh"
 #include "G4GenericMessenger.hh"
+#include "G4Ions.hh"
 
 class EUROPA_WP1SteppingAction : public G4UserSteppingAction
 {
@@ -81,6 +82,9 @@ private:
     G4String endproc;              ///< Process at track end
     G4String volumeNamePreStep;    ///< Volume name at pre-step point
     G4String volumeNamePostStep;   ///< Volume name at post-step point
+    G4ParticleDefinition* pd;
+    G4int Z;
+    G4int A;
 
     // --- Energy ---
     G4double energy = 0.0;           ///< Kinetic energy [MeV]
