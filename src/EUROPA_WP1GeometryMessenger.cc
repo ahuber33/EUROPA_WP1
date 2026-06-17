@@ -57,150 +57,111 @@ EUROPA_WP1GeometryMessenger::EUROPA_WP1GeometryMessenger(EUROPA_WP1GeometryConst
     //=====================================
 
     /**
-     * @brief Command to set the Q1 Length.
+     * @brief Command to set the Spectrum Temperature.
      *
-     * Parameter: Q1Length (double) unit
+     * Parameter: SpectrumTemperature (double) unit
      */
-    fGeometryQ1LengthCmd = new G4UIcmdWithADoubleAndUnit("/EUROPA_WP1/geometry/setQ1Length", this);
-    fGeometryQ1LengthCmd->SetGuidance("Set Q1 Length");
-    fGeometryQ1LengthCmd->SetParameterName("Q1Length", false);
-    fGeometryQ1LengthCmd->SetRange("Q1Length>0.");
-    fGeometryQ1LengthCmd->SetUnitCategory("Length");
-    fGeometryQ1LengthCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
-    fGeometryQ1LengthCmd->SetToBeBroadcasted(false);
-
-    /**
-     * @brief Command to set the Q2 Length.
-     *
-     * Parameter: Q2Length (double) unit
-     */
-    fGeometryQ2LengthCmd = new G4UIcmdWithADoubleAndUnit("/EUROPA_WP1/geometry/setQ2Length", this);
-    fGeometryQ2LengthCmd->SetGuidance("Set Q2 Length");
-    fGeometryQ2LengthCmd->SetParameterName("Q2Length", false);
-    fGeometryQ2LengthCmd->SetRange("Q2Length>0.");
-    fGeometryQ2LengthCmd->SetUnitCategory("Length");
-    fGeometryQ2LengthCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
-    fGeometryQ2LengthCmd->SetToBeBroadcasted(false);
-
-    /**
-     * @brief Command to set the Q3 Length.
-     *
-     * Parameter: Q3Length (double) unit
-     */
-    fGeometryQ3LengthCmd = new G4UIcmdWithADoubleAndUnit("/EUROPA_WP1/geometry/setQ3Length", this);
-    fGeometryQ3LengthCmd->SetGuidance("Set Q3 Length");
-    fGeometryQ3LengthCmd->SetParameterName("Q3Length", false);
-    fGeometryQ3LengthCmd->SetRange("Q3Length>0.");
-    fGeometryQ3LengthCmd->SetUnitCategory("Length");
-    fGeometryQ3LengthCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
-    fGeometryQ3LengthCmd->SetToBeBroadcasted(false);
-
-    /**
-     * @brief Command to set the Q4 Length.
-     *
-     * Parameter: Q4Length (double) unit
-     */
-    fGeometryQ4LengthCmd = new G4UIcmdWithADoubleAndUnit("/EUROPA_WP1/geometry/setQ4Length", this);
-    fGeometryQ4LengthCmd->SetGuidance("Set Q4 Length");
-    fGeometryQ4LengthCmd->SetParameterName("Q4Length", false);
-    fGeometryQ4LengthCmd->SetRange("Q4Length>0.");
-    fGeometryQ4LengthCmd->SetUnitCategory("Length");
-    fGeometryQ4LengthCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
-    fGeometryQ4LengthCmd->SetToBeBroadcasted(false);
-
-    /**
-     * @brief Command to set the Source - Q1 Distance.
-     *
-     * Parameter: SourceQ1Distance (double) unit
-     */
-    fGeometrySourceQ1DistanceCmd = new G4UIcmdWithADoubleAndUnit("/EUROPA_WP1/geometry/setSourceQ1Distance", this);
-    fGeometrySourceQ1DistanceCmd->SetGuidance("Set Source -- Q1 Distance");
-    fGeometrySourceQ1DistanceCmd->SetParameterName("SourceQ1Distance", false);
-    fGeometrySourceQ1DistanceCmd->SetRange("SourceQ1Distance>0.");
-    fGeometrySourceQ1DistanceCmd->SetUnitCategory("Length");
-    fGeometrySourceQ1DistanceCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
-    fGeometrySourceQ1DistanceCmd->SetToBeBroadcasted(false);
-
-    /**
-     * @brief Command to set the Q1 - Q2 Distance.
-     *
-     * Parameter: Q1Q2Distance (double) unit
-     */
-    fGeometryQ1Q2DistanceCmd = new G4UIcmdWithADoubleAndUnit("/EUROPA_WP1/geometry/setQ1Q2Distance", this);
-    fGeometryQ1Q2DistanceCmd->SetGuidance("Set Q1 -- Q2 Distance");
-    fGeometryQ1Q2DistanceCmd->SetParameterName("Q1Q2Distance", false);
-    fGeometryQ1Q2DistanceCmd->SetRange("Q1Q2Distance>0.");
-    fGeometryQ1Q2DistanceCmd->SetUnitCategory("Length");
-    fGeometryQ1Q2DistanceCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
-    fGeometryQ1Q2DistanceCmd->SetToBeBroadcasted(false);
-
-    /**
-     * @brief Command to set the Q2 - Q3 Distance.
-     *
-     * Parameter: Q2Q3Distance (double) unit
-     */
-    fGeometryQ2Q3DistanceCmd = new G4UIcmdWithADoubleAndUnit("/EUROPA_WP1/geometry/setQ2Q3Distance", this);
-    fGeometryQ2Q3DistanceCmd->SetGuidance("Set Q2 -- Q3 Distance");
-    fGeometryQ2Q3DistanceCmd->SetParameterName("Q2Q3Distance", false);
-    fGeometryQ2Q3DistanceCmd->SetRange("Q2Q3Distance>0.");
-    fGeometryQ2Q3DistanceCmd->SetUnitCategory("Length");
-    fGeometryQ2Q3DistanceCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
-    fGeometryQ2Q3DistanceCmd->SetToBeBroadcasted(false);
-
-    /**
-     * @brief Command to set the Q3 - Q4 Distance.
-     *
-     * Parameter: Q3Q4Distance (double) unit
-     */
-    fGeometryQ3Q4DistanceCmd = new G4UIcmdWithADoubleAndUnit("/EUROPA_WP1/geometry/setQ3Q4Distance", this);
-    fGeometryQ3Q4DistanceCmd->SetGuidance("Set Q3 -- Q4 Distance");
-    fGeometryQ3Q4DistanceCmd->SetParameterName("Q3Q4Distance", false);
-    fGeometryQ3Q4DistanceCmd->SetRange("Q3Q4Distance>0.");
-    fGeometryQ3Q4DistanceCmd->SetUnitCategory("Length");
-    fGeometryQ3Q4DistanceCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
-    fGeometryQ3Q4DistanceCmd->SetToBeBroadcasted(false);
-
-    /**
-     * @brief Command to set the Source - Collimators Distance.
-     *
-     * Parameter: SourceCollimatorsDistance (double) unit
-     */
-    fGeometrySourceCollimatorsDistanceCmd = new G4UIcmdWithADoubleAndUnit("/EUROPA_WP1/geometry/setSourceCollimatorsDistance", this);
-    fGeometrySourceCollimatorsDistanceCmd->SetGuidance("Set Source -- Collimators Distance");
-    fGeometrySourceCollimatorsDistanceCmd->SetParameterName("SourceCollimatorsDistance", false);
-    fGeometrySourceCollimatorsDistanceCmd->SetRange("SourceCollimatorsDistance>0.");
-    fGeometrySourceCollimatorsDistanceCmd->SetUnitCategory("Length");
-    fGeometrySourceCollimatorsDistanceCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
-    fGeometrySourceCollimatorsDistanceCmd->SetToBeBroadcasted(false);
+    fGeometrySpectrumTemperatureCmd = new G4UIcmdWithADoubleAndUnit("/EUROPA_WP1/geometry/setSpectrumTemperature", this);
+    fGeometrySpectrumTemperatureCmd->SetGuidance("Set Spectrum Temperature");
+    fGeometrySpectrumTemperatureCmd->SetParameterName("SpectrumTemperature", false);
+    //fGeometrySpectrumTemperatureCmd->SetRange("SpectrumTemperature>3. && SpectrumTemperature<300.");
+    fGeometrySpectrumTemperatureCmd->SetUnitCategory("Energy");
+    fGeometrySpectrumTemperatureCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+    fGeometrySpectrumTemperatureCmd->SetToBeBroadcasted(false);
 
 
     /**
-     * @brief Command to set the slit opening of Vertical Collimators.
+     * @brief Command to set the Spectrum Temperature.
      *
-     * Parameter: Vertical Slit opening (double) unit
+     * Parameter: SpectrumTemperature (double) unit
      */
-    fGeometryVerticalSlitOpeningCmd = new G4UIcmdWithADoubleAndUnit("/EUROPA_WP1/geometry/setVerticalSlitOpening", this);
-    fGeometryVerticalSlitOpeningCmd->SetGuidance("Set Vertical Slit Opening");
-    fGeometryVerticalSlitOpeningCmd->SetParameterName("VerticalSlitOpening", false);
-    fGeometryVerticalSlitOpeningCmd->SetRange("VerticalSlitOpening>0.");
-    fGeometryVerticalSlitOpeningCmd->SetUnitCategory("Length");
-    fGeometryVerticalSlitOpeningCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
-    fGeometryVerticalSlitOpeningCmd->SetToBeBroadcasted(false);
+    fGeometrySpectrumEcutCmd = new G4UIcmdWithADoubleAndUnit("/EUROPA_WP1/geometry/setSpectrumEcut", this);
+    fGeometrySpectrumEcutCmd->SetGuidance("Set Spectrum Ecut");
+    fGeometrySpectrumEcutCmd->SetParameterName("SpectrumEcut", false);
+    fGeometrySpectrumEcutCmd->SetRange("SpectrumEcut>3. && SpectrumEcut<600.");
+    fGeometrySpectrumEcutCmd->SetUnitCategory("Energy");
+    fGeometrySpectrumEcutCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+    fGeometrySpectrumEcutCmd->SetToBeBroadcasted(false);
 
 
     /**
-     * @brief Command to set the slit opening of Horizontal Collimators.
+     * @brief Command to set the Convertor Material.
      *
-     * Parameter: Horizontal Slit opening (double) unit
+     * Parameter: ConvertorMaterial (string)
      */
-    fGeometryHorizontalSlitOpeningCmd = new G4UIcmdWithADoubleAndUnit("/EUROPA_WP1/geometry/setHorizontalSlitOpening", this);
-    fGeometryHorizontalSlitOpeningCmd->SetGuidance("Set Horizontal Slit Opening");
-    fGeometryHorizontalSlitOpeningCmd->SetParameterName("HorizontalSlitOpening", false);
-    fGeometryHorizontalSlitOpeningCmd->SetRange("HorizontalSlitOpening>0.");
-    fGeometryHorizontalSlitOpeningCmd->SetUnitCategory("Length");
-    fGeometryHorizontalSlitOpeningCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
-    fGeometryHorizontalSlitOpeningCmd->SetToBeBroadcasted(false);
+    fGeometryConvertorMaterialCmd = new G4UIcmdWithAString("/EUROPA_WP1/geometry/setConvertorMaterial", this);
+    fGeometryConvertorMaterialCmd->SetGuidance("Set Convertor Material");
+    fGeometryConvertorMaterialCmd->SetParameterName("ConvertorMaterial", false);
+    fGeometryConvertorMaterialCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+    fGeometryConvertorMaterialCmd->SetToBeBroadcasted(false);
 
+    /**
+     * @brief Command to set the Convertor Radius.
+     *
+     * Parameter: ConvertorRadius (double) unit
+     */
+    fGeometryConvertorRadiusCmd = new G4UIcmdWithADoubleAndUnit("/EUROPA_WP1/geometry/setConvertorRadius", this);
+    fGeometryConvertorRadiusCmd->SetGuidance("Set Convertor Radius");
+    fGeometryConvertorRadiusCmd->SetParameterName("ConvertorRadius", false);
+    fGeometryConvertorRadiusCmd->SetRange("ConvertorRadius>0.");
+    fGeometryConvertorRadiusCmd->SetUnitCategory("Length");
+    fGeometryConvertorRadiusCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+    fGeometryConvertorRadiusCmd->SetToBeBroadcasted(false);
+
+
+    /**
+     * @brief Command to set the Convertor Thickness.
+     *
+     * Parameter: ConvertorThickness (double) unit
+     */
+    fGeometryConvertorThicknessCmd = new G4UIcmdWithADoubleAndUnit("/EUROPA_WP1/geometry/setConvertorThickness", this);
+    fGeometryConvertorThicknessCmd->SetGuidance("Set Convertor Thickness");
+    fGeometryConvertorThicknessCmd->SetParameterName("ConvertorThickness", false);
+    fGeometryConvertorThicknessCmd->SetRange("ConvertorThickness>0.");
+    fGeometryConvertorThicknessCmd->SetUnitCategory("Length");
+    fGeometryConvertorThicknessCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+    fGeometryConvertorThicknessCmd->SetToBeBroadcasted(false);
+
+
+    /**
+     * @brief Command to set the Cible Radius.
+     *
+     * Parameter: CibleRadius (double) unit
+     */
+    fGeometryCibleRadiusCmd = new G4UIcmdWithADoubleAndUnit("/EUROPA_WP1/geometry/setCibleRadius", this);
+    fGeometryCibleRadiusCmd->SetGuidance("Set Cible Radius");
+    fGeometryCibleRadiusCmd->SetParameterName("CibleRadius", false);
+    fGeometryCibleRadiusCmd->SetRange("CibleRadius>0.");
+    fGeometryCibleRadiusCmd->SetUnitCategory("Length");
+    fGeometryCibleRadiusCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+    fGeometryCibleRadiusCmd->SetToBeBroadcasted(false);
+
+
+    /**
+     * @brief Command to set the Cible Thickness.
+     *
+     * Parameter: CibleThickness (double) unit
+     */
+    fGeometryCibleThicknessCmd = new G4UIcmdWithADoubleAndUnit("/EUROPA_WP1/geometry/setCibleThickness", this);
+    fGeometryCibleThicknessCmd->SetGuidance("Set Cible Thickness");
+    fGeometryCibleThicknessCmd->SetParameterName("CibleThickness", false);
+    fGeometryCibleThicknessCmd->SetRange("CibleThickness>0.");
+    fGeometryCibleThicknessCmd->SetUnitCategory("Length");
+    fGeometryCibleThicknessCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+    fGeometryCibleThicknessCmd->SetToBeBroadcasted(false);
+
+
+    /**
+     * @brief Command to set the Cible Density Fraction.
+     *
+     * Parameter: CibleDensityFraction (double)
+     */
+    fGeometryCibleDensityFractionCmd = new G4UIcmdWithADouble("/EUROPA_WP1/geometry/setCibleDensityFraction", this);
+    fGeometryCibleDensityFractionCmd->SetGuidance("Set Cible Density Fraction");
+    fGeometryCibleDensityFractionCmd->SetParameterName("CibleDensityFraction", false);
+    fGeometryCibleDensityFractionCmd->SetRange("CibleDensityFraction >0 && CibleDensityFraction <=1.");
+    fGeometryCibleDensityFractionCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+    fGeometryCibleDensityFractionCmd->SetToBeBroadcasted(false);
 
 }
 
@@ -214,15 +175,14 @@ EUROPA_WP1GeometryMessenger::EUROPA_WP1GeometryMessenger(EUROPA_WP1GeometryConst
 EUROPA_WP1GeometryMessenger::~EUROPA_WP1GeometryMessenger()
 {
     delete fPrintCmd;
-    delete fGeometryQ1LengthCmd;
-    delete fGeometryQ2LengthCmd;
-    delete fGeometryQ3LengthCmd;
-    delete fGeometryQ4LengthCmd;
-    delete fGeometrySourceQ1DistanceCmd;
-    delete fGeometryQ1Q2DistanceCmd;
-    delete fGeometryQ2Q3DistanceCmd;
-    delete fGeometryQ3Q4DistanceCmd;
-    delete fGeometrySourceCollimatorsDistanceCmd;
+    delete fGeometrySpectrumTemperatureCmd;
+    delete fGeometrySpectrumEcutCmd;
+    delete fGeometryConvertorMaterialCmd;
+    delete fGeometryConvertorRadiusCmd;
+    delete fGeometryConvertorThicknessCmd;
+    delete fGeometryCibleRadiusCmd;
+    delete fGeometryCibleThicknessCmd;
+    delete fGeometryCibleDensityFractionCmd;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -241,49 +201,37 @@ void EUROPA_WP1GeometryMessenger::SetNewValue(G4UIcommand *aCommand, G4String aN
     {
         fGeometry->Print();
     }
-    else if (aCommand == fGeometryQ1LengthCmd)
+    else if (aCommand == fGeometrySpectrumTemperatureCmd)
     {
-        fGeometry->SetQ1Length(fGeometryQ1LengthCmd->GetNewDoubleValue(aNewValue));
+        fGeometry->SetSpectrumTemperature(fGeometrySpectrumTemperatureCmd->GetNewDoubleValue(aNewValue));
     }
-    else if (aCommand == fGeometryQ2LengthCmd)
+    else if (aCommand == fGeometrySpectrumEcutCmd)
     {
-        fGeometry->SetQ2Length(fGeometryQ2LengthCmd->GetNewDoubleValue(aNewValue));
+        fGeometry->SetSpectrumEcut(fGeometrySpectrumEcutCmd->GetNewDoubleValue(aNewValue));
     }
-    else if (aCommand == fGeometryQ3LengthCmd)
+    else if (aCommand == fGeometryConvertorMaterialCmd)
     {
-        fGeometry->SetQ3Length(fGeometryQ3LengthCmd->GetNewDoubleValue(aNewValue));
+        fGeometry->SetConvertorMaterial(aNewValue);
     }
-    else if (aCommand == fGeometryQ4LengthCmd)
+    else if (aCommand == fGeometryConvertorRadiusCmd)
     {
-        fGeometry->SetQ4Length(fGeometryQ4LengthCmd->GetNewDoubleValue(aNewValue));
+        fGeometry->SetConvertorRadius(fGeometryConvertorRadiusCmd->GetNewDoubleValue(aNewValue));
     }
-    else if (aCommand == fGeometrySourceQ1DistanceCmd)
+    else if (aCommand == fGeometryConvertorThicknessCmd)
     {
-        fGeometry->SetSourceQ1Distance(fGeometrySourceQ1DistanceCmd->GetNewDoubleValue(aNewValue));
+        fGeometry->SetConvertorThickness(fGeometryConvertorThicknessCmd->GetNewDoubleValue(aNewValue));
     }
-    else if (aCommand == fGeometryQ1Q2DistanceCmd)
+    else if (aCommand == fGeometryCibleRadiusCmd)
     {
-        fGeometry->SetQ1Q2Distance(fGeometryQ1Q2DistanceCmd->GetNewDoubleValue(aNewValue));
+        fGeometry->SetCibleRadius(fGeometryCibleRadiusCmd->GetNewDoubleValue(aNewValue));
     }
-    else if (aCommand == fGeometryQ2Q3DistanceCmd)
+    else if (aCommand == fGeometryCibleThicknessCmd)
     {
-        fGeometry->SetQ2Q3Distance(fGeometryQ2Q3DistanceCmd->GetNewDoubleValue(aNewValue));
+        fGeometry->SetCibleThickness(fGeometryCibleThicknessCmd->GetNewDoubleValue(aNewValue));
     }
-    else if (aCommand == fGeometryQ3Q4DistanceCmd)
+    else if (aCommand == fGeometryCibleDensityFractionCmd)
     {
-        fGeometry->SetQ3Q4Distance(fGeometryQ3Q4DistanceCmd->GetNewDoubleValue(aNewValue));
-    }
-    else if (aCommand == fGeometrySourceCollimatorsDistanceCmd)
-    {
-        fGeometry->SetSourceCollimatorsDistance(fGeometrySourceCollimatorsDistanceCmd->GetNewDoubleValue(aNewValue));
-    }
-    else if (aCommand == fGeometryVerticalSlitOpeningCmd)
-    {
-        fGeometry->SetVerticalSlitOpening(fGeometryVerticalSlitOpeningCmd->GetNewDoubleValue(aNewValue));
-    }
-    else if (aCommand == fGeometryHorizontalSlitOpeningCmd)
-    {
-        fGeometry->SetHorizontalSlitOpening(fGeometryHorizontalSlitOpeningCmd->GetNewDoubleValue(aNewValue));
+        fGeometry->SetCibleDensityFraction(fGeometryCibleDensityFractionCmd->GetNewDoubleValue(aNewValue));
     }
 }
 
@@ -301,49 +249,37 @@ G4String EUROPA_WP1GeometryMessenger::GetCurrentValue(G4UIcommand *aCommand)
 {
     G4String cv;
 
-    if (aCommand == fGeometryQ1LengthCmd)
+    if (aCommand == fGeometrySpectrumTemperatureCmd)
     {
-        cv = fGeometryQ1LengthCmd->ConvertToString(fGeometry->GetQ1Length(), "m");
+        cv = fGeometrySpectrumTemperatureCmd->ConvertToString(fGeometry->GetSpectrumTemperature(), "MeV");
     }
-        else if (aCommand == fGeometryQ2LengthCmd)
+    else if (aCommand == fGeometrySpectrumEcutCmd)
     {
-        cv = fGeometryQ2LengthCmd->ConvertToString(fGeometry->GetQ2Length(), "m");
+        cv = fGeometrySpectrumEcutCmd->ConvertToString(fGeometry->GetSpectrumEcut(), "MeV");
     }
-        else if (aCommand == fGeometryQ3LengthCmd)
+    else if (aCommand == fGeometryConvertorMaterialCmd)
     {
-        cv = fGeometryQ3LengthCmd->ConvertToString(fGeometry->GetQ3Length(), "m");
+        cv = fGeometry->GetConvertorMaterial();
     }
-        else if (aCommand == fGeometryQ4LengthCmd)
+    else if (aCommand == fGeometryConvertorRadiusCmd)
     {
-        cv = fGeometryQ4LengthCmd->ConvertToString(fGeometry->GetQ4Length(), "m");
+        cv = fGeometryConvertorRadiusCmd->ConvertToString(fGeometry->GetConvertorRadius(), "mm");
     }
-    else if (aCommand == fGeometrySourceQ1DistanceCmd)
+    else if (aCommand == fGeometryConvertorThicknessCmd)
     {
-        cv = fGeometrySourceQ1DistanceCmd->ConvertToString(fGeometry->GetSourceQ1Distance(), "m");
+        cv = fGeometryConvertorThicknessCmd->ConvertToString(fGeometry->GetConvertorThickness(), "mm");
     }
-    else if (aCommand == fGeometryQ1Q2DistanceCmd)
+    else if (aCommand == fGeometryCibleRadiusCmd)
     {
-        cv = fGeometryQ1Q2DistanceCmd->ConvertToString(fGeometry->GetQ1Q2Distance(), "m");
+        cv = fGeometryCibleRadiusCmd->ConvertToString(fGeometry->GetCibleRadius(), "mm");
     }
-    else if (aCommand == fGeometryQ2Q3DistanceCmd)
+    else if (aCommand == fGeometryCibleThicknessCmd)
     {
-        cv = fGeometryQ2Q3DistanceCmd->ConvertToString(fGeometry->GetQ2Q3Distance(), "m");
+        cv = fGeometryCibleThicknessCmd->ConvertToString(fGeometry->GetCibleThickness(), "mm");
     }
-    else if (aCommand == fGeometryQ3Q4DistanceCmd)
+    else if (aCommand == fGeometryCibleDensityFractionCmd)
     {
-        cv = fGeometryQ3Q4DistanceCmd->ConvertToString(fGeometry->GetQ3Q4Distance(), "m");
-    }
-    else if (aCommand == fGeometrySourceCollimatorsDistanceCmd)
-    {
-        cv = fGeometrySourceCollimatorsDistanceCmd->ConvertToString(fGeometry->GetSourceCollimatorsDistance(), "m");
-    }
-    else if (aCommand == fGeometryVerticalSlitOpeningCmd)
-    {
-        cv = fGeometryVerticalSlitOpeningCmd->ConvertToString(fGeometry->GetVerticalSlitOpening(), "m");
-    }
-    else if (aCommand == fGeometryHorizontalSlitOpeningCmd)
-    {
-        cv = fGeometryHorizontalSlitOpeningCmd->ConvertToString(fGeometry->GetHorizontalSlitOpening(), "m");
+        cv = fGeometryCibleDensityFractionCmd->ConvertToString(fGeometry->GetCibleDensityFraction());
     }
     return cv;
 }
