@@ -3,8 +3,8 @@
 /vis/drawVolume                                                   # Draw the full geometry
 #/vis/viewer/set/style wireframe                                  # (optional) Set geometry to wireframe style
 /vis/viewer/set/viewpointThetaPhi 0 0                             # Set the camera viewpoint angles theta=0, phi=0
-/vis/viewer/set/upVector 1 0 0                                    # Set the camera "up" vector
-/vis/viewer/set/viewpointVector -0.99 0 0.01                      # Set the camera pointing vector
+/vis/viewer/set/upVector 0 1 0                                    # Set the camera "up" vector
+/vis/viewer/set/viewpointVector -1 0 0.                      # Set the camera pointing vector
 /vis/viewer/zoom 1.                                               # Set initial zoom to 1x
 /vis/viewer/set/auxiliaryEdge true                                # Display auxiliary edges for better visibility
 #/vis/set/lineWidth 2                                             # (optional) Set line width
@@ -38,20 +38,14 @@
 ###################################################################
 ################# PART FOR MESSENGER INFORMATION ##################
 ###################################################################
-/EUROPA_WP1/geometry/setQ1Length 0.1 m                        # Set Q1 Length
-/EUROPA_WP1/geometry/setQ2Length 0.1 m                        # Set Q2 Length
-/EUROPA_WP1/geometry/setQ3Length 0.2 m                        # Set Q3 Length
-/EUROPA_WP1/geometry/setQ4Length 0.1 m                        # Set Q4 Length
-/EUROPA_WP1/geometry/setSourceQ1Distance 0.173331 m           # Distance from source to Q1 
-/EUROPA_WP1/geometry/setQ1Q2Distance 0.165062 m               # Distance between Q1 & Q2
-/EUROPA_WP1/geometry/setQ2Q3Distance 0.259041 m               # Distance between Q2 & Q3
-/EUROPA_WP1/geometry/setQ3Q4Distance 0.86536 m                # Distance between Q3 & Q4
-/EUROPA_WP1/geometry/setSourceCollimatorsDistance 2884.5 mm   # Distance from source to collimators
-
-
-/EUROPA_WP1/geometry/setHorizontalSlitOpening 0.4 mm          # Horizontal slit collimator (1st collimator)
-/EUROPA_WP1/geometry/setVerticalSlitOpening 0.2 mm            # Vertical slit opening (2nd collimator)
-
+/EUROPA_WP1/geometry/setSpectrumTemperature 3.0 MeV           # Set Spectrum Temperature
+/EUROPA_WP1/geometry/setSpectrumEcut 300.0 MeV                # Set Spectrum Ecut
+/EUROPA_WP1/geometry/setConvertorMaterial G4_W                # Set Convertor Material
+/EUROPA_WP1/geometry/setConvertorRadius 10 mm                 # Set Convertor Radius
+/EUROPA_WP1/geometry/setConvertorThickness 5 mm              # Set Convertor Thickness
+/EUROPA_WP1/geometry/setCibleRadius 10 mm                     # Set Cible Radius
+/EUROPA_WP1/geometry/setCibleThickness 1 mm                  # Set Cible Thickness
+/EUROPA_WP1/geometry/setCibleDensityFraction 1                # Set Cible Density Fraction
 
 /run/reinitializeGeometry                                         # Apply geometry changes
 
@@ -70,8 +64,13 @@
 /gps/number 1                                                     # Generate 1 particle
 /gps/particle geantino                                            # Set particle type
 /gps/pos/type Point                                               # Particle generated at a point
-/gps/pos/centre 0.0 0.0 0.0 mm                                      # Particle start position
-/gps/direction 0.0 1.0 0.0                                        # Particle direction along Y-axis
-/gps/energy 250. MeV                                              # Particle energy
+/gps/pos/centre 0.0 0.0 -500.0 mm                                      # Particle start position
+/gps/direction 0.0 0.0 1.0                                        # Particle direction along Y-axis
+#/gps/energy 250. MeV                                              # Particle energy
+
+/gps/ene/type Exp
+/gps/ene/min 1 MeV
+/gps/ene/max 450. MeV
+/gps/ene/ezero 75 MeV
 
 /run/beamOn 1                                                     # Start simulation for 1 particle

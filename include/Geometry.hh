@@ -63,17 +63,7 @@ public:
    * @param name Name of the volume.
    * @return Pointer to the created G4LogicalVolume.
    */
-  G4LogicalVolume* GetFakeCollimatorVolume(G4String name);
-
-  /**
-   * @brief Create a quadrupole magnet volume.
-   * @param name Name of the quadrupole volume.
-   * @param dx dx length.
-   * @param dy dy length.
-   * @param dz dz length.
-   * @return Pointer to the created G4LogicalVolume.
-   */
-  G4LogicalVolume* GetQuadrupoleVolume(G4String name, G4double dx, G4double dy, G4double sz);
+  G4LogicalVolume* GetTubsVolume(G4String name, G4String material, G4double radius, G4double thickness, G4double densityfraction);
 
 
   /**
@@ -87,6 +77,7 @@ private:
   Geometry *Geom;  ///< Pointer to another Geometry instance (if needed).
   EUROPA_WP1GeometryConstruction *SimGeometry; ///< Pointer to main simulation geometry.
   G4Material *Material; ///< Default material used in volumes.
+  G4Material *scaledMaterial; ///< Default material used in volumes.
   G4LogicalVolume* LogicalVolume; ///< Keeps track of allocated logical volume.
   G4Box* Box; ///< Keeps track of allocated box solid.
   G4Tubs* Tubs; ///< Keeps track of allocated tube solid.
