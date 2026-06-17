@@ -27,6 +27,7 @@ struct RunTallyInput
     float z = 0.0;
     float zp = 0.0;
     float energy = 0.0;
+
 };
 
 
@@ -35,7 +36,7 @@ struct RunTallyInput
  *
  * Tracks interaction coordinates, energies between primary e- and collimators.
  */
-struct RunTallyCollimators
+struct RunTallyConverter
 {
     float x = 0.0;
     float y = 0.0;
@@ -66,53 +67,30 @@ struct RunTallyCollimators
  *
  * Tracks exit coordinates, particle IDs, energies, deposited energy, and flags.
  */
-struct RunTallyYAG
+struct RunTallyCible
 {
-    std::vector<float> x_exit;
-    std::vector<float> y_exit;
-    std::vector<float> z_exit;
-    std::vector<int> parentID;
-    std::vector<int> particleID;
+    std::vector<float> x_creation;
+    std::vector<float> y_creation;
+    std::vector<float> z_creation;
     std::vector<float> energy;
-    float deposited_energy = 0.0;
-    std::vector<float> total_deposited_energy;
-    G4bool flag = false;
 
     // Methods to add data
-    void AddXExit(float d) { x_exit.push_back(d); }
-    void AddYExit(float d) { y_exit.push_back(d); }
-    void AddZExit(float d) { z_exit.push_back(d); }
-    void AddParentID(int d) { parentID.push_back(d); }
-    void AddParticleID(int d) { particleID.push_back(d); }
+    void AddXCreation(float d) { x_creation.push_back(d); }
+    void AddYCreation(float d) { y_creation.push_back(d); }
+    void AddZCreation(float d) { z_creation.push_back(d); }
     void AddEnergy(float d) { energy.push_back(d); }
-    void AddDepositedEnergy(float d) { deposited_energy += d; }
-    void AddTotalDepositedEnergy(float d) { total_deposited_energy.push_back(d); }
 
     // Size accessors
-    size_t XExitSize() const { return x_exit.size(); }
-    size_t YExitSize() const { return y_exit.size(); }
-    size_t ZExitSize() const { return z_exit.size(); }
-    size_t ParentIDSize() const { return parentID.size(); }
-    size_t ParticleIDSize() const { return particleID.size(); }
+    size_t XCreationSize() const { return x_creation.size(); }
+    size_t YCreationSize() const { return y_creation.size(); }
+    size_t ZCreationSize() const { return z_creation.size(); }
     size_t EnergySize() const { return energy.size(); }
-    size_t TotalDepositedEnergySize() const { return total_deposited_energy.size(); }
 
     // Index accessors
-    float GetXExit(size_t i) const { return x_exit.at(i); }
-    float GetYExit(size_t i) const { return y_exit.at(i); }
-    float GetZExit(size_t i) const { return z_exit.at(i); }
-    int GetParentID(size_t i) const { return parentID.at(i); }
-    int GetParticleID(size_t i) const { return particleID.at(i); }
+    float GetXCreation(size_t i) const { return x_creation.at(i); }
+    float GetYCreation(size_t i) const { return y_creation.at(i); }
+    float GetZCreation(size_t i) const { return z_creation.at(i); }
     float GetEnergy(size_t i) const { return energy.at(i); }
-    float GetTotalDepositedEnergy(size_t i) const { return total_deposited_energy.at(i); }
-
-    // Flags
-    void ActivateFlag() { flag = true; }
-    void ResetFlag() { flag = false; }
-    G4bool ReturnFlag() const { return flag; }
-
-    void ResetDepositedEnergy() { deposited_energy = 0; }
-    float GetDepositedEnergy() const { return deposited_energy; }
 };
 
 /**
@@ -136,7 +114,8 @@ public:
     /** Called at the end of each event */
     void EndOfEventAction(const G4Event *);
 
-    /** Setters for input particle data */
+
+    // Setters for input particle data //
     void SetXStart(G4float d) { StatsInput.x = d; }
     void SetXpStart(G4float d) { StatsInput.xp = d; }
     void SetYStart(G4float d) { StatsInput.y = d; }
@@ -145,21 +124,27 @@ public:
     void SetZpStart(G4float d) { StatsInput.zp = d; }
     void SetEnergyStart(G4float d) { StatsInput.energy = d; }
 
+    // Methods to access data
+    float GetXStart() {return StatsInput.x;}
+    float GetXpStart() {return StatsInput.xp;}
+    float GetYStart() {return StatsInput.y;}
+    float GetYpStart() {return StatsInput.yp;}
+    float GetZStart() {return StatsInput.z;}
+    float GetZpStart() {return StatsInput.zp;}
+    float GetEnergyStart() {return StatsInput.energy;}
 
     /** Accessors for generic detector statistics */
-    RunTallyCollimators& GetVerticalCollimators() { return StatsVerticalColl; }
-    RunTallyCollimators& GetHorizontalCollimators() { return StatsHorizontalColl; }
+    RunTallyConverter& GetConverter() { return StatsConverter; }
 
     /** Accessors for generic detector statistics */
-    RunTallyYAG& GetBSYAG() { return StatsBSYAG; }
+    RunTallyCible& GetCible() { return StatsCible; }
 
 private:
     TTree *EventTree;                        ///< ROOT tree for per-event data
     TBranch *EventBranch;                    ///< ROOT branch for event tree
     RunTallyInput StatsInput;                ///< Input particle statistics
-    RunTallyCollimators StatsHorizontalColl; ///< Horizontal collimator statistics
-    RunTallyCollimators StatsVerticalColl;   ///< Vertical collimator statistics
-    RunTallyYAG StatsBSYAG;                  ///< Beam Stop YAG detector statistics
+    RunTallyConverter StatsConverter; ///< Horizontal converter statistics
+    RunTallyCible StatsCible;                  ///< Beam Stop Cible statistics
     G4String suffixe;                        ///< Suffix for output naming
 };
 

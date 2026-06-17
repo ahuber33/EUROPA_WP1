@@ -58,11 +58,10 @@ void EUROPA_WP1EventAction::BeginOfEventAction(const G4Event *evt)
     StatsInput = {};
 
     /** Reset horizontal and vertical collimator statistics */
-    StatsHorizontalColl = {};
-    StatsVerticalColl = {};
+    StatsConverter = {};
 
     /** Reset Beam Stop (BS) and BSPEC YAG detector statistics */
-    StatsBSYAG = {};
+    StatsCible = {};
 
 }
 
@@ -83,25 +82,14 @@ void EUROPA_WP1EventAction::EndOfEventAction(const G4Event *evt)
 
     /** Update input energy statistics if valid */
     if (StatsInput.energy > 0) 
-        //runac->UpdateStatisticsInput(StatsInput);
+        runac->UpdateStatisticsInput(StatsInput);
 
     /** Update Beam Stop YAG statistics if not empty */
-    if (!StatsBSYAG.energy.empty()) 
-        runac->UpdateStatisticsBSYAG(StatsBSYAG);
+    if (!StatsCible.energy.empty()) 
+        runac->UpdateStatisticsCible(StatsCible);
 
-    /** Always update quadrupole and collimator statistics */
-    //runac->UpdateStatisticsQuadrupoles(StatsQuadrupoles);
-
-    if(StatsHorizontalColl.GetFlag()==true)
-    {
-      //runac->UpdateStatisticsHorizontalColl(StatsHorizontalColl);
-      StatsHorizontalColl.ResetFlag();
-    }
-
-    if(StatsVerticalColl.GetFlag()==true)
-    {
-      //runac->UpdateStatisticsVerticalColl(StatsVerticalColl);
-      StatsVerticalColl.ResetFlag();
-    }
+    /** Update Beam Stop YAG statistics if not empty */
+    //if (!StatsConverter.energy.empty()) 
+        runac->UpdateStatisticsConverter(StatsConverter);        
 
 }
